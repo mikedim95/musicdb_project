@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block content %}
+<h1>Confirm Delete</h1>
+
+<p>
+  Are you sure you want to delete the album:
+  <strong>{{ album.title }}</strong> by {{ album.artist }}?
+</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Yes, delete</button>
+  <a href="{% url 'album_list' %}">Cancel</a>
+</form>
+{% endblock %}

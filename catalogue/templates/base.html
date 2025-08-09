@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MyMusicMaestro</title>
+  </head>
+  <body>
+    {% if user.is_authenticated %} Logged in as {{ user.username }} |
+    <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    {% endif %} {% if user.is_authenticated %}
+    <p>Logged in as {{ user.username }} | <a href="/">Logout</a></p>
+    {% else %}
+    <p><a href="/accounts/login/">Login</a></p>
+    {% endif %}
+    <hr />
+    {% block content %}{% endblock %}
+  </body>
+</html>

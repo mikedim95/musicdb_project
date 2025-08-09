@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block content %}
+<h1>{{ album.title }}</h1>
+<p><strong>Artist:</strong> {{ album.artist }}</p>
+<p><strong>Price:</strong> £{{ album.price }}</p>
+<p><strong>Slug:</strong> {{ album.slug }}</p>
+
+<h3>Tracklist</h3>
+{% if tracklist %}
+<ol>
+  {% for item in tracklist %}
+  <li>{{ item.song.title }} ({{ item.song.length }}s)</li>
+  {% endfor %}
+</ol>
+{% else %}
+<p>No tracks in this album yet.</p>
+{% endif %}
+
+<p><a href="{% url 'album_list' %}">← Back to album list</a></p>
+{% endblock %}

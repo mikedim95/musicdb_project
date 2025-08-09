@@ -3,17 +3,22 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 from datetime import date, timedelta
+from django.core.validators import MinValueValidator
 
 
 class Song(models.Model):
-    title = models.CharField(max_length=512)
-    running_time = models.PositiveIntegerField(
-        help_text="Length of the song in seconds (≥ 10)")
+    title = models.CharField(max_length=200)
+    artist = models.CharField(max_length=200, default="Unknown Artist")
+
+    duration = models.PositiveIntegerField(
+        validators=[MinValueValidator(10)],
+        help_text="Duration in seconds (minimum 10)", default="10"
+    )
 
     def clean(self):
-        if self.running_time < 10:
+        if self.duration < 10:
             raise ValidationError(
-                {'running_time': 'Song must be at least 10 seconds long.'})
+                {'duration': 'Song must be at least 10 seconds long.'})
 
     def __str__(self):
         return self.title
@@ -44,13 +49,10 @@ class Album(models.Model):
         ]
 
     def clean(self):
-        max_future_date = date.today() + timedelta(days=3*365)
-        if self.release_date > max_future_date:
-            raise ValidationError(
-                {'release_date': 'Release date cannot be more than 3 years in the future.'})
-        if self.price < 0 or self.price > 999.99:
-            raise ValidationError(
-                {'price': 'Price must be between £0.00 and £999.99.'})
+        if self.release_date and self.release_date > date.today():
+            raise ValidationError("Release date cannot be in the future.")
+        if self.price is not None and self.price > 99.99:
+            raise ValidationError("Price cannot exceed 99.99.")
 
     def save(self, *args, **kwargs):
         if not self.slug:

@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block content %}
+<h1>Delete Track</h1>
+
+<p>
+  Are you sure you want to remove <strong>{{ track.song.title }}</strong> from
+  the album <strong>{{ album.title }}</strong>?
+</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Yes, delete track</button>
+  <a href="{% url 'album_detail' album.id %}">Cancel</a>
+</form>
+{% endblock %}
