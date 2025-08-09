@@ -187,7 +187,7 @@ def delete_track_view(request, album_id, track_id):
 
     return render(request, 'catalogue/track_confirm_delete.html', {
         'album': album,
-        'track': track_item,
+        'track':  track_item,
     })
 
 
