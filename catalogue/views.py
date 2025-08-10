@@ -6,6 +6,13 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.core.exceptions import PermissionDenied
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+
+def logout_view(request):
+    logout(request)  # removes session
+    return redirect('album_list')  # send back to album list
 
 
 def album_list_view(request):
@@ -14,12 +21,15 @@ def album_list_view(request):
 
     if user.is_authenticated and hasattr(user, 'musicmanageruser'):
         mm_user = user.musicmanageruser
+        print(f"User {user.username} has permission: {mm_user.permission}")
         if mm_user.permission == 'artist':
             albums = Album.objects.filter(artist=mm_user.display_name)
+            print(
+                f"Filtered albums for artist {mm_user.display_name}: {albums}")
         else:
             albums = Album.objects.all()
     else:
-        albums = Album.objects.none()
+        albums = Album.objects.all()
 
     return render(request, 'catalogue/album_list.html', {'albums': albums})
 

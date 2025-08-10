@@ -5,10 +5,17 @@
 <p><strong>Slug:</strong> {{ album.slug }}</p>
 
 <h3>Tracklist</h3>
-{% if tracklist %}
+
+{# show Add track only for editor/artist #} {% if user.is_authenticated %} {%
+with profile=user.musicmanageruser %} {% if profile and profile.permission !=
+'viewer' %}
+<p><a href="{% url 'add_track' album.id %}">➕ Add track</a></p>
+{% endif %} {% if tracklist %}
 <ol>
   {% for item in tracklist %}
-  <li>{{ item.song.title }} ({{ item.song.length }}s)</li>
+  <li>
+    {{ item.position }}. {{ item.song.title }} ({{ item.song.duration }}s)
+  </li>
   {% endfor %}
 </ol>
 {% else %}
