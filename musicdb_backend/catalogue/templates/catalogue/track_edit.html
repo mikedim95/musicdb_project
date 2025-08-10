@@ -1,0 +1,31 @@
+{% extends "catalogue/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1>Edit Track in {{ album.title }}</h1>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="id_song" class="form-label">Song</label>
+      <select id="id_song" name="song" class="form-select">
+        {% for song in songs %}
+          <option value="{{ song.id }}" {% if song.id == track.song.id %}selected{% endif %}>
+            {{ song.title }} ({{ song.length }} sec)
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="id_position" class="form-label">Position</label>
+      <input type="number" id="id_position" name="position" class="form-control"
+             value="{{ track.position }}" min="1" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save changes</button>
+    <a href="{% url 'album_detail' id=album.id %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

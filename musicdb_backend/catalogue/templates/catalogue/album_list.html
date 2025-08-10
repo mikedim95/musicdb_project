@@ -1,0 +1,62 @@
+{% extends "catalogue/base.html" %} {% block content %}
+<div class="container mt-4">
+  <h1>Album List</h1>
+
+  {% if mm_user %} {% if mm_user.permission == "editor" %}
+  <p>You are an editor — you can view and manage all albums.</p>
+  {% elif mm_user.permission == "artist" %}
+  <p>You are an artist — viewing only your albums.</p>
+  {% endif %} {% endif %} {% if can_create %}
+  <a href="{% url 'create_album' %}" class="btn btn-success mb-3"
+    >+ New Album</a
+  >
+  {% endif %} {% if albums %}
+  <div class="row g-4">
+    {% for album in albums %}
+    <div class="col-md-4">
+      <div class="card h-100">
+        {% if album.cover_image %}
+        <img
+          src="{{ album.cover_image.url }}"
+          class="card-img-top"
+          alt="{{ album.title }}"
+        />
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ album.title }}</h5>
+          <p class="card-text">
+            {{ album.artist }}<br />
+            {{ album.release_year }}
+          </p>
+
+          <div class="d-flex gap-2">
+            <a
+              class="btn btn-outline-secondary btn-sm"
+              href="{% url 'album_detail' id=album.id %}"
+              >View</a
+            >
+
+            {% if album.can_edit %}
+            <a
+              class="btn btn-primary btn-sm"
+              href="{% url 'album_edit' id=album.id %}"
+              >Edit</a
+            >
+            {% endif %} {% if album.can_delete %}
+            <a
+              class="btn btn-danger btn-sm"
+              href="{% url 'album_delete' id=album.id %}"
+              >Delete</a
+            >
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No albums found.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "catalogue/base.html" %} {% load i18n %} {% block content %}
+<div class="d-flex gap-2 mb-3">
+  {% if can_edit %}
+  <a class="btn btn-primary" href="{% url 'album_edit' album.id %}">
+    {% trans "Edit album" %}
+  </a>
+  {% endif %} {% if can_delete %}
+  <a class="btn btn-danger" href="{% url 'album_delete' album.id %}">
+    {% trans "Delete album" %}
+  </a>
+  {% endif %}
+</div>
+
+<div class="card shadow-sm app-card mb-4">
+  <div class="row g-0">
+    <div class="col-md-4">
+      {% if album.cover_image %}
+      <img
+        src="{{ album.cover_image.url }}"
+        class="w-100 h-100 app-cover"
+        style="min-height: 240px"
+        alt="{{ album.title }}"
+      />
+      {% else %}
+      <img
+        src="https://via.placeholder.com/640x480?text=No+cover"
+        class="w-100 h-100 app-cover"
+        style="min-height: 240px"
+        alt="{% trans 'No cover' %}"
+      />
+      {% endif %}
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h4 class="card-title">{{ album.title }}</h4>
+        <div class="text-muted mb-2">{{ album.artist }}</div>
+        <div class="mb-3">{{ album.description }}</div>
+        <div class="text-muted">
+          {{ album.price }} ({{ album.get_format_display }})
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card app-card">
+  <div class="card-body">
+    <h5 class="mb-3">{% trans "Tracklist" %}</h5>
+    {% if can_edit %}
+    <a
+      class="btn btn-outline-primary btn-sm mb-3"
+      href="{% url 'add_track' album.id %}"
+    >
+      {% trans "Add track" %}
+    </a>
+    {% endif %} {% if tracklist %}
+    <ol class="mb-0">
+      {% for t in tracklist %}
+      <li class="mb-1 d-flex justify-content-between align-items-center">
+        <span>
+          {{ t.position|default:"–" }}. {{ t.song.title }} - {{ t.song.length
+          }}s
+        </span>
+        {% if can_edit %}
+        <span class="ms-3">
+          <a
+            class="btn btn-outline-secondary btn-sm"
+            href="{% url 'edit_track' album.id t.id %}"
+          >
+            {% trans "Edit" %}
+          </a>
+          <a
+            class="btn btn-outline-danger btn-sm"
+            href="{% url 'delete_track' album.id t.id %}"
+          >
+            {% trans "Delete" %}
+          </a>
+        </span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p class="text-muted mb-0">{% trans "No songs added" %}</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
