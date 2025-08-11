@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 
 export default function AlbumList() {
   const { data, isLoading, error } = useQuery("albums", () =>
-    fetch("http://localhost:8000/api/albums/", {
-      headers: { Accept: "application/json" },
-    }).then((r) => {
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r.json();
-    })
+    fetch("/api/albums/", { headers: { Accept: "application/json" } }).then(
+      (r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      }
+    )
   );
 
   if (isLoading) return <Spinner animation="border" />;
